@@ -101,7 +101,7 @@ module.exports = ({
         }
 
         //浏览器端的websocket代码
-        hmrJs = hmrJs || hmrhmrjsfn(wsPort, cssSelectorPrefix)
+        hmrJs = hmrJs || hmrjsfn(wsPort, cssSelectorPrefix)
 
         //插入热更新所需要的js文件
         body = body.replace('</body>', `<script>${hmrJs}</script></body>`)
