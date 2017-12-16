@@ -4,6 +4,9 @@
  *  - wsPort要与matfile.js里启动的ws服务的端口相同
  *  - 基于seajs模块加载器
  */
+
+module.exports = (wsPort, cssSelectorPrefix) => {
+    return `
 ;
 (function () {
     seajs.use(['magix', '$$'], function (M, $) {
@@ -37,7 +40,7 @@
         //exp: /Users/chongzhi/work/scaffold/src/app/views/examples/third.html --> app/views/examples/third
         //dirname: 指定包路径起始文件夹
         var resolvePath2View = function (_path, dirname = 'app') {
-            var rexp = new RegExp(`.+(${dirname}\/[^\.]+)(?:\.[^\.]+)?`)
+            var rexp = new RegExp('.+(' + dirname + '\/[^\.]+)(?:\.[^\.]+)?')
             var parse = rexp.exec(_path)
             return parse && parse[1]
         }
@@ -64,7 +67,7 @@
 
                 if (supportStyles.test(pathObjs.originPath)) {
                     var styles = magix.applyStyle;
-                    var added = '${cssSelectorPrefix}_' + resolvePath2View(pathObjs.originPath).replace(/\//g, '_') + '_';
+                    var added = '${cssSelectorPrefix}_' + resolvePath2View(pathObjs.originPath).replace(/\\//g, '_') + '_';
                     for (var s in styles) {
                         if (s == added) {
                             delete styles[s];
@@ -98,3 +101,5 @@
         })
     }
 })()
+`
+}

@@ -6,6 +6,7 @@ const path = require('path')
 const combineTool = require('magix-combine')
 const combineDeps = require('magix-combine/plugins/util-deps')
 const WebSocket = require('ws')
+const hmrjsfn = require('./hmr')
 
 module.exports = ({
     //热更新监听的文件
@@ -20,7 +21,8 @@ module.exports = ({
     ],
     //全局的样式，必须触发全页刷新
     scopedCss,
-    cssSelectorPrefix
+    cssSelectorPrefix,
+    hmrJs
 }) => {
 
     let wsPort //websocket端口
@@ -99,10 +101,9 @@ module.exports = ({
         }
 
         //浏览器端的websocket代码
-        let hmrJs = fs.readFileSync('./hmr.js', 'utf8').replace('${wsPort}', wsPort).replace('${cssSelectorPrefix}', cssSelectorPrefix);
+        hmrJs = hmrJs || hmrhmrjsfn(wsPort, cssSelectorPrefix)
 
         //插入热更新所需要的js文件
-        // console.log(/<\/body>/.test(body))
         body = body.replace('</body>', `<script>${hmrJs}</script></body>`)
         this.body = body
     }
