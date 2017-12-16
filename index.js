@@ -46,22 +46,39 @@ module.exports = ({
         console.log(chalk.green(`[HMR] 服务已启动`))
 
         gulp.watch(watchFiles, (e) => {
-            console.log(chalk.yellow('[HMR] file changed', e.path))
+            let filePath = e.path
+            console.log(chalk.yellow('[HMR] file changed', filePath))
+
+            /**
+             * 针对less/scss文件可以指定它所被import的父级文件，以实现热更新
+             * 样式文件中注释表明被引用的来源文件
+             * 注释写法: 
+             *   @call: ./index.less
+             */
+            let supportStyles = /(:?\.css|\.less|\.sass|\.scss)/
+            if (supportStyles.test(path.extname(filePath))) {
+                let styleContent = fs.readFileSync(filePath, 'utf8')
+                let exec = /\/\*\s*@call\s*:\s*([^;^\s]+)\s*;?\s*\*\//.exec(styleContent)
+                if (exec && exec[1]) {
+                    filePath = path.resolve(path.dirname(filePath), exec[1])
+                }
+            }
+
             let pathObjs = {
-                originPath: e.path,
+                originPath: filePath,
                 depsPaths: []
             }
 
             if (combineTool.removeCache) {
-                console.log(chalk.yellow('[HMR] remove cahce', e.path))
-                combineTool.removeCache(e.path);
+                console.log(chalk.yellow('[HMR] remove cahce', filePath))
+                combineTool.removeCache(filePath);
             }
 
             //combine-tool-config里配置的scopedCss特殊处理，直接全页刷新，不再HMR
             let isReload = false
             if (scopedCss && scopedCss.length) {
                 scopedCss.forEach((cssPath) => {
-                    if (path.relative(e.path, cssPath) === '') {
+                    if (path.relative(filePath, cssPath) === '') {
                         isReload = true
                     }
                 })
@@ -70,19 +87,19 @@ module.exports = ({
             if (!isReload) {
                 //less/html等文件找到最终依赖viewjs
                 //js文件即是本身
-                let extname = path.extname(e.path)
+                let extname = path.extname(filePath)
                 let depsPaths = []
                 if (extname === '.js') {
-                    depsPaths = [e.path]
+                    depsPaths = [filePath]
                 } else {
-                    let deps = combineDeps.getDependencies(e.path)
+                    let deps = combineDeps.getDependencies(filePath)
                     for (let k in deps) {
                         depsPaths.push(k)
                     }
                 }
 
                 pathObjs = {
-                    originPath: e.path,
+                    originPath: filePath,
                     depsPaths: depsPaths
                 }
             }
