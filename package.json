@@ -1,0 +1,29 @@
+{
+  "name": "magix-hmr",
+  "version": "1.0.0",
+  "description": "magix hot module replacement",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thx/magix-hmr.git"
+  },
+  "keywords": [
+    "hmr"
+  ],
+  "author": "chongzhi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thx/magix-hmr/issues"
+  },
+  "homepage": "https://github.com/thx/magix-hmr#readme",
+  "dependencies": {
+    "chalk": "^2.3.0",
+    "gulp": "^3.9.1",
+    "magix-combine": "^3.7.3",
+    "portfinder": "^1.0.13",
+    "ws": "^3.3.2"
+  }
+}
