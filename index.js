@@ -22,14 +22,23 @@ module.exports = ({
     //全局的样式，必须触发全页刷新
     scopedCss,
     cssSelectorPrefix,
-    hmrJs
+    //可以自行指定注入到页面的hmr脚本
+    hmrJs,
+    //可以固定websocket的端口号，不自动生成
+    wsPort
 }) => {
 
-    let wsPort //websocket端口
+    if (wsPort) {
+        startServer()
+    } else {
+        portfinder.getPort((err, _wsPort) => {
+            wsPort = _wsPort
+            startServer()
+        })
+    }
 
     //获取一个未被占用的端口
-    portfinder.getPort((err, _wsPort) => {
-        wsPort = _wsPort
+    function startServer() {
         const ws = new WebSocket.Server({
             port: wsPort
         })
@@ -90,7 +99,7 @@ module.exports = ({
             console.log(chalk.green('[HMR] websocket握手成功'))
         });
 
-    })
+    }
 
     return function* combine(next) {
         yield next
