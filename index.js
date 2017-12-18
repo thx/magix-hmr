@@ -3,8 +3,6 @@ const fs = require('fs')
 const chalk = require('chalk')
 const gulp = require('gulp')
 const path = require('path')
-const combineTool = require('magix-combine')
-const combineDeps = require('magix-combine/plugins/util-deps')
 const WebSocket = require('ws')
 const hmrjsfn = require('./hmr')
 
@@ -25,7 +23,8 @@ module.exports = ({
     //可以自行指定注入到页面的hmr脚本
     hmrJs,
     //可以固定websocket的端口号，不自动生成
-    wsPort
+    wsPort,
+    combineTool
 }) => {
 
     if (wsPort) {
@@ -92,7 +91,7 @@ module.exports = ({
                 if (extname === '.js') {
                     depsPaths = [filePath]
                 } else {
-                    let deps = combineDeps.getDependencies(filePath)
+                    let deps = combineTool.getFileDependents(filePath)
                     for (let k in deps) {
                         depsPaths.push(k)
                     }
