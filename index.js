@@ -57,8 +57,8 @@ module.exports = ({
             let supportStyles = /(:?\.css|\.less|\.sass|\.scss)/
             if (supportStyles.test(path.extname(filePath))) {
                 let styleContent = fs.readFileSync(filePath, 'utf8')
-                let exec = /\/\*\s*@dependent\s*:\s*([^;^\s]+)\s*;?\s*\*\//.exec(styleContent) // 注释形式 '/*...*/'
-                let exec2 = /\/\/\s*@dependent\s*:\s*([^;]+);?/.exec(styleContent) //注释形式 '//'
+                let exec = /\/\*\s*@dependent\s*:\s*([^;\s]+)\s*;?\s*\*\//.exec(styleContent) // 注释形式 '/*...*/'
+                let exec2 = /\/\/\s*@dependent\s*:\s*([^;\s]+);?/.exec(styleContent) //注释形式 '//'
 
                 if (exec && exec[1]) {
                     filePath = path.resolve(path.dirname(filePath), exec[1])
