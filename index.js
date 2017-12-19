@@ -30,13 +30,13 @@ module.exports = ({
     if (wsPort) {
         startServer()
     } else {
+        //获取一个未被占用的端口
         portfinder.getPort((err, _wsPort) => {
             wsPort = _wsPort
             startServer()
         })
     }
 
-    //获取一个未被占用的端口
     function startServer() {
         const ws = new WebSocket.Server({
             port: wsPort
@@ -52,12 +52,12 @@ module.exports = ({
              * 针对less/scss文件可以指定它所被import的父级文件，以实现热更新
              * 样式文件中注释表明被引用的来源文件
              * 注释写法: 
-             *   @call: ./index.less
+             *   @dependent: ./index.less
              */
             let supportStyles = /(:?\.css|\.less|\.sass|\.scss)/
             if (supportStyles.test(path.extname(filePath))) {
                 let styleContent = fs.readFileSync(filePath, 'utf8')
-                let exec = /\/\*\s*@call\s*:\s*([^;^\s]+)\s*;?\s*\*\//.exec(styleContent)
+                let exec = /\/\*\s*@dependent\s*:\s*([^;^\s]+)\s*;?\s*\*\//.exec(styleContent)
                 if (exec && exec[1]) {
                     filePath = path.resolve(path.dirname(filePath), exec[1])
                 }
