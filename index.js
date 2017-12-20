@@ -46,7 +46,7 @@ module.exports = ({
 
         gulp.watch(watchFiles, (e) => {
             let filePath = e.path
-            console.log(chalk.yellow('[HMR] file changed', filePath))
+            console.log('[HMR]', chalk.green('file changed'), chalk.cyan(filePath))
 
             /**
              * 针对less/scss文件可以指定它所被import的父级文件，以实现热更新
@@ -73,7 +73,8 @@ module.exports = ({
             }
 
             if (combineTool.removeCache) {
-                console.log(chalk.yellow('[HMR] remove cahce', filePath))
+                console.log('[HMR]', chalk.green('remove cahce'), chalk.cyan(filePath))
+                // console.log(chalk.cyan('[HMR] remove cahce', filePath))
                 combineTool.removeCache(filePath);
             }
 
