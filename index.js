@@ -44,6 +44,10 @@ module.exports = ({
 
         console.log(chalk.green(`[HMR] 服务已启动`))
 
+        ws.on('connection', client => {
+            console.log(chalk.green('[HMR] websocket握手成功'))
+        })
+
         gulp.watch(watchFiles, (e) => {
             let filePath = e.path
             console.log('[HMR]', chalk.green('file changed'), chalk.cyan(filePath))
@@ -73,8 +77,7 @@ module.exports = ({
             }
 
             if (combineTool.removeCache) {
-                console.log('[HMR]', chalk.green('remove cahce'), chalk.cyan(filePath))
-                // console.log(chalk.cyan('[HMR] remove cahce', filePath))
+                // console.log('[HMR]', chalk.green('remove cahce'), chalk.cyan(filePath))
                 combineTool.removeCache(filePath);
             }
 
@@ -115,10 +118,6 @@ module.exports = ({
                 }
             })
         })
-
-        ws.on('connection', client => {
-            console.log(chalk.green('[HMR] websocket握手成功'))
-        });
 
     }
 
