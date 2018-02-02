@@ -24,7 +24,8 @@ module.exports = ({
     hmrJs,
     //可以固定websocket的端口号，不自动生成
     wsPort,
-    combineTool
+    combineTool,
+    host = '127.0.0.1'
 }) => {
 
     if (wsPort) {
@@ -130,7 +131,8 @@ module.exports = ({
         }
 
         //浏览器端的websocket代码
-        hmrJs = hmrJs || hmrjsfn(wsPort, cssSelectorPrefix)
+        host = host.replace(/^https?:\/\//, '')
+        hmrJs = hmrJs || hmrjsfn(wsPort, cssSelectorPrefix, host)
 
         //插入热更新所需要的js文件
         body = body.replace('</body>', `<script>${hmrJs}</script></body>`)

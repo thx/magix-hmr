@@ -5,7 +5,7 @@
  *  - 基于seajs模块加载器
  */
 
-module.exports = (wsPort, cssSelectorPrefix) => {
+module.exports = (wsPort, cssSelectorPrefix, host) => {
     return `
 ;
 (function () {
@@ -24,7 +24,7 @@ module.exports = (wsPort, cssSelectorPrefix) => {
         M.applyStyle = View_ApplyStyle;
     });
 
-    var ws = new WebSocket('ws://127.0.0.1:${wsPort}')
+    var ws = new WebSocket('ws://${host}:${wsPort}')
     ws.onopen = function () {
         console.log("[HMR] websocket 握手成功!");
         ws.send('[HMR] 浏览器端发送的信息')
