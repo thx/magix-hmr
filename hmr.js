@@ -79,14 +79,11 @@ module.exports = (wsPort, cssSelectorPrefix, host) => {
 
                 currentVframes.forEach(function (vf) {
                     // require 移除view模块缓存
-                    pathObjs.depsPaths.forEach(function (_path) {
-                        var view = resolvePath2View(_path);
-                        var path = seajs.resolve(view);
-                        delete seajs.cache[path];
-                        delete seajs.data.fetchedList[path];
-                        // 重新加载view模块
-                        vf.mountView(vf.path, vf.viewInitParams)
-                    })
+                    var path = seajs.resolve(vf.path);
+                    delete seajs.cache[path];
+                    delete seajs.data.fetchedList[path];
+                    // 重新加载view模块
+                    vf.mountView(vf.path, vf.viewInitParams)
                 })
             }
             //不存在则直接reload整个页面
