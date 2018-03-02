@@ -10,8 +10,8 @@ module.exports = (wsPort, cssSelectorPrefix, host) => {
 ;
 (function () {
     seajs.use(['magix', '$$'], function (M, $) {
-        var oldMountView = M.Vframe.mountView;
-        M.Vframe.mountView = function (path, params) {
+        var oldMountView = M.Vframe.prototype.mountView;
+        M.Vframe.prototype.mountView = function (path, params) {
             this.viewInitParams = params;
             oldMountView.apply(this, arguments);
         };
