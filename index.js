@@ -97,7 +97,8 @@ module.exports = ({
                 //js文件即是本身
                 let extname = path.extname(filePath)
                 let depsPaths = []
-                if (extname === '.js') {
+                let supportJs = ['.js', '.ts', '.es']
+                if (supportJs.indexOf(extname) > -1) {
                     depsPaths = [filePath]
                 } else {
                     let deps = combineTool.getFileDependents(filePath)
