@@ -22,6 +22,7 @@ module.exports = ({
     cssSelectorPrefix,
     //可以自行指定注入到页面的hmr脚本
     hmrJs,
+    rootAppName = 'app', //默认的项目app目录名
     //可以固定websocket的端口号，不自动生成
     wsPort,
     combineTool,
@@ -133,7 +134,7 @@ module.exports = ({
 
         //浏览器端的websocket代码
         host = host.replace(/^https?:\/\//, '')
-        hmrJs = hmrJs || hmrjsfn(wsPort, cssSelectorPrefix, host)
+        hmrJs = hmrJs || hmrjsfn(wsPort, cssSelectorPrefix, host, rootAppName)
 
         //插入热更新所需要的js文件
         body = body.replace('</body>', `<script>${hmrJs}</script></body>`)

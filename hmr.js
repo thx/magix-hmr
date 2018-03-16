@@ -5,7 +5,7 @@
  *  - 基于seajs模块加载器
  */
 
-module.exports = (wsPort, cssSelectorPrefix, host) => {
+module.exports = (wsPort, cssSelectorPrefix, host, rootAppName) => {
     return `
 ;
 (function () {
@@ -39,8 +39,8 @@ module.exports = (wsPort, cssSelectorPrefix, host) => {
         //将本地文件path处理成magix view的path
         //exp: /Users/chongzhi/work/scaffold/src/app/views/examples/third.html --> app/views/examples/third
         //dirname: 指定包路径起始文件夹
-        var resolvePath2View = function (_path, dirname = 'app') {
-            var rexp = new RegExp('.+(' + dirname + '\/[^\.]+)(?:\.[^\.]+)?')
+        var resolvePath2View = function (_path) {
+            var rexp = new RegExp('.+(${rootAppName}\/[^\.]+)(?:\.[^\.]+)?')
             var parse = rexp.exec(_path)
             return parse && parse[1]
         }
