@@ -15,13 +15,6 @@ module.exports = (wsPort, cssSelectorPrefix, host, rootAppName) => {
             this.viewInitParams = params;
             oldMountView.apply(this, arguments);
         };
-        var View_ApplyStyle = function (key, css) {
-            if (css && !View_ApplyStyle[key]) {
-                View_ApplyStyle[key] = 1;
-                $('head').append('<style id="' + key + '">' + css + '</style>');
-            }
-        };
-        M.applyStyle = View_ApplyStyle;
     });
 
     var ws = new WebSocket('ws://${host}:${wsPort}')
