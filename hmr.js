@@ -54,7 +54,7 @@ module.exports = (wsPort, cssSelectorPrefix, host, rootAppName) => {
                 })
             }
             //如果存在对应的view，则更新
-            if (currentVframes.length) {
+            if (currentVframes.length && currentVframes.length === pathObjs.depsPaths.length) {
                 //支持多种样式格式
                 var supportStyles = /(:?\.css|\.less|\.sass|\.scss)$/
 
