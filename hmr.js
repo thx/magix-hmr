@@ -5,10 +5,16 @@
  *  - 基于seajs模块加载器
  */
 
+var argv = require('minimist')(process.argv.slice(2));
+
 module.exports = (wsPort, cssSelectorPrefix, host, rootAppName) => {
     return `
 ;
 (function () {
+    ${argv.d ? 'window.__isDaily__ = true;' : ''}
+    ${argv.o ? 'window.__isOnline__ = true;' : ''}
+    ${(!argv.o && !argv.d) ? 'window.__isRap__ = true;' : ''}
+    
     seajs.use(['magix', '$$'], function (M, $) {
         var oldMountView = M.Vframe.prototype.mountView;
         M.Vframe.prototype.mountView = function (path, params) {
