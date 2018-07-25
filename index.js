@@ -19,7 +19,7 @@ module.exports = ({
     ],
     //全局的样式，必须触发全页刷新
     scopedCss,
-    cssSelectorPrefix,
+    // cssSelectorPrefix,
     //可以自行指定注入到页面的hmr脚本
     hmrJs,
     rootAppName = 'app', //默认的项目app目录名
@@ -134,7 +134,7 @@ module.exports = ({
 
         //浏览器端的websocket代码
         host = host.replace(/^https?:\/\//, '')
-        hmrJs = hmrJs || hmrjsfn(wsPort, cssSelectorPrefix, host, rootAppName)
+        hmrJs = hmrJs || hmrjsfn(wsPort, host, rootAppName)
 
         //插入热更新所需要的js文件
         body = body.replace('</body>', `<script>${hmrJs}</script></body>`)

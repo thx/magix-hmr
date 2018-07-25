@@ -7,7 +7,7 @@
 
 var argv = require('minimist')(process.argv.slice(2));
 
-module.exports = (wsPort, cssSelectorPrefix, host, rootAppName) => {
+module.exports = (wsPort, host, rootAppName) => {
     return `
 ;
 (function () {
@@ -66,7 +66,7 @@ module.exports = (wsPort, cssSelectorPrefix, host, rootAppName) => {
 
                 if (supportStyles.test(pathObjs.originPath)) {
                     var styles = magix.applyStyle;
-                    var added = '${cssSelectorPrefix}_' + resolvePath2View(pathObjs.originPath).replace(/\\//g, '_') + '_';
+                    var added = '${rootAppName}_' + resolvePath2View(pathObjs.originPath).replace(/\\//g, '_') + '_';
                     for (var s in styles) {
                         if (s == added) {
                             delete styles[s];
