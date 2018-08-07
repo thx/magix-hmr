@@ -26,7 +26,8 @@ module.exports = ({
     //可以固定websocket的端口号，不自动生成
     wsPort,
     combineTool,
-    host = '127.0.0.1'
+    host = '127.0.0.1',
+    mdPort = 3007 //magix-desiger用的端口号，注入到页面上
 }) => {
 
     if (wsPort) {
@@ -137,7 +138,7 @@ module.exports = ({
         hmrJs = hmrJs || hmrjsfn(wsPort, host, rootAppName)
 
         //插入热更新所需要的js文件
-        body = body.replace('</body>', `<script>${hmrJs}</script></body>`)
+        body = body.replace('</body>', `<script>${hmrJs}</script> <!-- <magix-designer-port>${mdPort}</magix-designer-port> --> </body>`)
         this.body = body
     }
 }
