@@ -32,7 +32,14 @@ module.exports = (wsPort, host, rootAppName) => {
         console.log('[HMR] websocket 服务器关闭了!')
     }
     ws.onmessage = function (e) {
-        var pathObjs = JSON.parse(e.data)
+        var parseData = JSON.parse(e.data)
+
+        if (parseData.type === 'error') {
+            console.error(parseData.message)
+            return 
+        }
+
+        var pathObjs = parseData
         console.log('[HMR] 本地修改的文件数据', pathObjs)
 
         //将本地文件path处理成magix view的path

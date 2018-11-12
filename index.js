@@ -28,7 +28,7 @@ module.exports = ({
     combineTool,
     host = '127.0.0.1',
     mdPort = 3007 //magix-desiger用的端口号，注入到页面上
-}) => {
+}, ws) => {
 
     if (wsPort) {
         startServer()
@@ -41,9 +41,11 @@ module.exports = ({
     }
 
     function startServer() {
-        const ws = new WebSocket.Server({
-            port: wsPort
-        })
+        if (!ws) {
+            ws = new WebSocket.Server({
+                port: wsPort
+            })
+        }
 
         console.log(chalk.green(`[HMR] 服务已启动`))
 
