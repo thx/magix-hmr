@@ -5,6 +5,7 @@ const gulp = require('gulp')
 const path = require('path')
 const WebSocket = require('ws')
 const hmrjsfn = require('./hmr')
+const requestPromise = require('request-promise')
 
 module.exports = ({
     //热更新监听的文件
@@ -25,6 +26,7 @@ module.exports = ({
     rootAppName = 'app', //默认的项目app目录名
     //可以固定websocket的端口号，不自动生成
     wsPort,
+    closeDesiger,
     combineTool,
     host = '127.0.0.1',
     mdPort = 3007 //magix-desiger用的端口号，注入到页面上
@@ -135,12 +137,27 @@ module.exports = ({
             throw new Error('路径：' + this.path + ' 对应的文件没有找到')
         }
 
+        //--closeDesiger 控制是否启用magix-desiger
+        let magixDesigerJs
+        if (!closeDesiger) {
+            //magix-desiger相关的js注入，保存在alp上面
+            magixDesigerJs = yield requestPromise({
+                url: 'https://mo.m.taobao.com/magix_desiger_page_version',
+                rejectUnauthorized: false
+            })
+        }
+
         //浏览器端的websocket代码
         host = host.replace(/^https?:\/\//, '')
         hmrJs = hmrJs || hmrjsfn(wsPort, host, rootAppName)
 
         //插入热更新所需要的js文件
-        body = body.replace('</body>', `<script>${hmrJs}</script> <!-- <magix-designer-port>${mdPort}</magix-designer-port> --> </body>`)
+        body = body.replace('</body>', `
+            <script>${hmrJs}</script>
+            <!-- <magix-designer-port>${mdPort}</magix-designer-port> -->  
+            ${magixDesigerJs ? `<script src="${magixDesigerJs}"></script>` : ``}
+            </body>
+        `)
         this.body = body
     }
 }
