@@ -1,6 +1,6 @@
 {
   "name": "magix-hmr",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "description": "magix hot module replacement",
   "main": "index.js",
   "scripts": {

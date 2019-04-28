@@ -52,6 +52,7 @@ module.exports = (wsPort, host, rootAppName) => {
 
             for (var key in allVframes) {
                 var vframe = allVframes[key]
+                if (!vframe.path) continue
                 var info = magix.parseUrl(vframe.path);
 
                 pathObjs.depsPaths.forEach(function (_path) {
