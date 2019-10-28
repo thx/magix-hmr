@@ -55,8 +55,10 @@ module.exports = ({
             console.log(chalk.green('[HMR] websocket握手成功'))
         })
 
-        gulp.watch(watchFiles, (e) => {
-            let filePath = e.path
+        const watcher = gulp.watch(watchFiles)
+        watcher.on('change', (_filePath) => {
+
+            let filePath = path.resolve(process.cwd(), _filePath)
             console.log('[HMR]', chalk.green('file changed'), chalk.cyan(filePath))
 
             /**
