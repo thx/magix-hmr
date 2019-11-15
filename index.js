@@ -46,11 +46,6 @@ module.exports = ({
         }
 
         console.log(chalk.green(`[HMR] 服务已启动`))
-
-        ws.on('connection', client => {
-            console.log(chalk.green('[HMR] websocket握手成功'))
-        })
-
         const watcher = gulp.watch(watchFiles)
 
         watcher.on('change', (_filePath, stats) => {
