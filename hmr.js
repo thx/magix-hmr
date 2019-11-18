@@ -20,7 +20,6 @@ module.exports = (wsPort, host, rootAppName) => {
     var ws = new WebSocket('ws://${host}:${wsPort}')
     ws.onopen = function () {
         console.log("[HMR] websocket 握手成功!");
-        ws.send('[HMR] 浏览器端发送的信息')
     };
     ws.onclose = function (e) {
         console.log('[HMR] websocket 服务器关闭了!')
