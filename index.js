@@ -27,14 +27,15 @@ module.exports = ({
     combineTool,
     host = '127.0.0.1'
 }, ws) => {
+    let watcher
 
     if (wsPort) {
-        startServer()
+        watcher = startServer()
     } else {
         //获取一个未被占用的端口
         portfinder.getPort((err, _wsPort) => {
             wsPort = _wsPort
-            startServer()
+            watcher = startServer()
         })
     }
 
@@ -121,11 +122,12 @@ module.exports = ({
             })
         })
 
+        return watcher
+
     }
 
-    return function* combine(next) {
+    const returnComb = function* combine(next) {
         yield next
-
         let body = this.body.toString()
         if (body == 'Not Found') {
             throw new Error('路径：' + this.path + ' 对应的文件没有找到')
@@ -141,5 +143,8 @@ module.exports = ({
             </body>
         `)
         this.body = body
+
     }
+    returnComb.watcher = watcher
+    return returnComb
 }
