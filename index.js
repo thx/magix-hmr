@@ -7,6 +7,8 @@ const hmrjsfn = require('./hmr')
 const chokidar = require('chokidar')
 
 module.exports = ({
+    customLog = console.log,
+    cwd = process.cwd(),
     //热更新监听的文件
     watchFiles = [
         'src/**/*.js',
@@ -46,13 +48,13 @@ module.exports = ({
             })
         }
 
-        console.log(chalk.green(`[HMR] 服务已启动`))
+        customLog(chalk.green(`[HMR] 服务已启动`))
         const watcher = chokidar.watch(watchFiles)
 
         watcher.on('change', (_filePath) => {
 
-            let filePath = path.resolve(process.cwd(), _filePath)
-            console.log('[HMR]', chalk.green('file changed'), chalk.cyan(filePath))
+            let filePath = path.resolve(cwd, _filePath)
+            customLog('[HMR]', chalk.green('file changed'), chalk.cyan(filePath))
 
             /**
              * 针对less/scss文件可以指定它所被import的父级文件，以实现热更新
@@ -79,7 +81,7 @@ module.exports = ({
             }
 
             if (combineTool.removeCache) {
-                // console.log('[HMR]', chalk.green('remove cahce'), chalk.cyan(filePath))
+                // customLog('[HMR]', chalk.green('remove cahce'), chalk.cyan(filePath))
                 combineTool.removeCache(filePath);
             }
 
