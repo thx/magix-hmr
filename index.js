@@ -1,10 +1,10 @@
 const portfinder = require('portfinder')
 const fs = require('fs')
 const chalk = require('chalk')
-const gulp = require('gulp')
 const path = require('path')
 const WebSocket = require('ws')
 const hmrjsfn = require('./hmr')
+const chokidar = require('chokidar')
 
 module.exports = ({
     //热更新监听的文件
@@ -47,9 +47,9 @@ module.exports = ({
         }
 
         console.log(chalk.green(`[HMR] 服务已启动`))
-        const watcher = gulp.watch(watchFiles)
+        const watcher = chokidar.watch(watchFiles)
 
-        watcher.on('change', (_filePath, stats) => {
+        watcher.on('change', (_filePath) => {
 
             let filePath = path.resolve(process.cwd(), _filePath)
             console.log('[HMR]', chalk.green('file changed'), chalk.cyan(filePath))

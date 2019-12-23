@@ -1,6 +1,6 @@
 {
   "name": "magix-hmr",
-  "version": "1.0.32",
+  "version": "1.0.33",
   "description": "magix hot module replacement",
   "main": "index.js",
   "scripts": {
@@ -21,10 +21,10 @@
   "homepage": "https://github.com/thx/magix-hmr#readme",
   "dependencies": {
     "chalk": "1.1.3",
-    "gulp": "^4.0.0",
-    "portfinder": "1.0.13",
-    "ws": "2.3.1",
+    "chokidar": "^3.3.1",
     "minimist": "1.2.0",
-    "request-promise": "4.2.1"
+    "portfinder": "1.0.13",
+    "request-promise": "4.2.1",
+    "ws": "2.3.1"
   }
 }
