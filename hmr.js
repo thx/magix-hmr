@@ -5,7 +5,7 @@
  *  - 基于seajs模块加载器
  */
 
-module.exports = (wsPort, host, rootAppName) => {
+module.exports = (wsPort, host) => {
     return `
 ;
 (function () {
@@ -38,11 +38,6 @@ module.exports = (wsPort, host, rootAppName) => {
         //将本地文件path处理成magix view的path
         //exp: /Users/chongzhi/work/scaffold/src/app/views/examples/third.html --> app/views/examples/third
         //dirname: 指定包路径起始文件夹
-        var resolvePath2View = function (_path) {
-            var rexp = new RegExp('.+(${rootAppName}\/[^\.]+)(?:\.[^\.]+)?')
-            var parse = rexp.exec(_path)
-            return parse && parse[1]
-        }
 
         //找到对应的view更新
         seajs.use(['magix', '$$'], function (magix, $) {
@@ -55,7 +50,7 @@ module.exports = (wsPort, host, rootAppName) => {
                 var info = magix.parseUrl(vframe.path);
 
                 pathObjs.depsPaths.forEach(function (_path) {
-                    if (info.path === resolvePath2View(_path)) {
+                    if (info.path === _path) {
                         currentVframes.push(vframe)
                     }
                 })
@@ -68,9 +63,8 @@ module.exports = (wsPort, host, rootAppName) => {
 
                 if (supportStyles.test(pathObjs.originPath)) {
                     var styles = magix.applyStyle;
-                    var added = '${rootAppName}_' + resolvePath2View(pathObjs.originPath).replace(/\\//g, '_') + '_';
                     for (var s in styles) {
-                        if (s == added) {
+                        if (s == pathObjs.originPathResolve) {
                             delete styles[s];
                             $('#' + s).remove();
                             break;
@@ -79,8 +73,7 @@ module.exports = (wsPort, host, rootAppName) => {
                 }
 
                 // require 移除view模块缓存
-                pathObjs.depsPaths.forEach(function (_path) {
-                    var view = resolvePath2View(_path);
+                pathObjs.depsPaths.forEach(function (view) {
                     var path = seajs.resolve(view);
                     delete seajs.cache[path];
                     delete seajs.data.fetchedList[path];

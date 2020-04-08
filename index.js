@@ -95,27 +95,36 @@ module.exports = ({
                 })
             }
 
+            function resolvePath2View(_path) {
+                var rexp = new RegExp(`.+(${rootAppName}\/[^\.]+)(?:\.[^\.]+)?`)
+                var parse = rexp.exec(_path)
+                return parse && parse[1]
+            }
+
             if (!isReload) {
+
                 //less/html等文件找到最终依赖viewjs
                 //js文件即是本身
                 let extname = path.extname(filePath)
                 let depsPaths = []
                 let supportJs = ['.js', '.ts', '.es']
                 if (supportJs.indexOf(extname) > -1) {
-                    depsPaths = [filePath]
+                    depsPaths = [resolvePath2View(filePath)]
                 } else {
                     let deps = combineTool.getFileDependents(filePath)
                     for (let k in deps) {
-                        depsPaths.push(k)
+                        depsPaths.push(resolvePath2View(k))
                     }
                 }
 
+                let originPathResolve = `${combineTool.config().projectName}_${resolvePath2View(filePath).replace(/\//g, '_')}_`;
+
                 pathObjs = {
                     originPath: filePath,
+                    originPathResolve,
                     depsPaths: depsPaths
                 }
             }
-
             //多窗口多客户端同时发送信息
             ws.clients.forEach(client => {
                 if (client.readyState === WebSocket.OPEN) {
@@ -137,7 +146,7 @@ module.exports = ({
 
         //浏览器端的websocket代码
         host = host.replace(/^https?:\/\//, '')
-        hmrJs = hmrJs || hmrjsfn(wsPort, host, rootAppName)
+        hmrJs = hmrJs || hmrjsfn(wsPort, host)
 
         //插入热更新所需要的js文件
         body = body.replace('</body>', `
