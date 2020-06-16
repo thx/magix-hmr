@@ -122,7 +122,7 @@ module.exports = ({
                 pathObjs = {
                     originPath: filePath,
                     originPathResolve,
-                    depsPaths: depsPaths
+                    depsPaths
                 }
             }
             //多窗口多客户端同时发送信息
