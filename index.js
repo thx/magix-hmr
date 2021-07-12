@@ -27,7 +27,8 @@ module.exports = ({
   // 可以固定websocket的端口号，不自动生成
   wsPort,
   combineTool,
-  host = '127.0.0.1'
+  host = '127.0.0.1',
+  isMagix5 = false // 是否是新 magix5
 }, ws) => {
   let watcher
 
@@ -144,7 +145,7 @@ module.exports = ({
 
     // 浏览器端的websocket代码
     host = host.replace(/^https?:\/\//, '')
-    hmrJs = hmrJs || hmrjsfn(wsPort, host)
+    hmrJs = hmrJs || hmrjsfn(wsPort, host, isMagix5)
 
     // 插入热更新所需要的js文件
     body = body.replace('</body>', `
