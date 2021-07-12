@@ -54,7 +54,7 @@ module.exports = ({
 
     watcher.on('change', (_filePath) => {
       let filePath = path.resolve(cwd, _filePath)
-      customLog('[HMR]', chalk.green('file changed'), chalk.cyan(filePath))
+      customLog(`[HMR] ${chalk.green('file changed')} ${chalk.cyan(filePath)}`)
 
       /**
              * 针对less/scss文件可以指定它所被import的父级文件，以实现热更新
