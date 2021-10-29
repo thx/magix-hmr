@@ -75,22 +75,21 @@ module.exports = ({
         }
       }
 
-      let pathObjs = {
+      const pathObjs = {
         originPath: filePath,
-        depsPaths: []
+        depsPaths: [],
+        isReload: false // 强制直接刷新页面的标识
       }
 
       if (combineTool.removeCache) {
-        // customLog('[HMR]', chalk.green('remove cahce'), chalk.cyan(filePath))
         combineTool.removeCache(filePath)
       }
 
-      // combine-tool-config里配置的scopedCss特殊处理，直接全页刷新，不再HMR
-      let isReload = false
+      // combine-tool-config 里配置的 scopedCss 特殊处理，直接全页刷新，不再HMR
       if (scopedCss && scopedCss.length) {
         scopedCss.forEach((cssPath) => {
           if (path.relative(filePath, cssPath) === '') {
-            isReload = true
+            pathObjs.isReload = true
           }
         })
       }
@@ -101,30 +100,28 @@ module.exports = ({
         return parse && parse[1]
       }
 
-      if (!isReload) {
-        // less/html等文件找到最终依赖viewjs
-        // js文件即是本身
-        const extname = path.extname(filePath)
-        let depsPaths = []
-        const supportJs = ['.js', '.ts', '.es']
-        if (supportJs.indexOf(extname) > -1) {
-          depsPaths = [resolvePath2View(filePath)]
-        } else {
-          const deps = combineTool.getFileDependents(filePath)
-          for (const k in deps) {
-            depsPaths.push(resolvePath2View(k))
-          }
-        }
-
-        // const originPathResolve = `${combineTool.config().projectName}_${resolvePath2View(filePath).replace(/\//g, '_')}_`
-        const originPathResolve = combineTool.getStyleFileUniqueKey(filePath)
-
-        pathObjs = {
-          originPath: filePath,
-          originPathResolve,
-          depsPaths
+      // less/html等文件找到最终依赖viewjs
+      // js文件即是本身
+      const extname = path.extname(filePath)
+      let depsPaths = []
+      const supportJs = ['.js', '.ts', '.es']
+      if (supportJs.indexOf(extname) > -1) {
+        depsPaths = [resolvePath2View(filePath)]
+      } else {
+        const deps = combineTool.getFileDependents(filePath)
+        for (const k in deps) {
+          depsPaths.push(resolvePath2View(k))
         }
       }
+
+      // const originPathResolve = `${combineTool.config().projectName}_${resolvePath2View(filePath).replace(/\//g, '_')}_`
+      const originPathResolve = combineTool.getStyleFileUniqueKey(filePath)
+
+      Object.assign(pathObjs, {
+        originPathResolve,
+        depsPaths
+      })
+
       // 多窗口多客户端同时发送信息
       ws.clients.forEach(client => {
         if (client.readyState === WebSocket.OPEN) {

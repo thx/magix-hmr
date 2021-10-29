@@ -27,6 +27,11 @@ module.exports = (wsPort, host, isMagix5) => {
     ws.onmessage = function (e) {
         const pathObjs = JSON.parse(e.data)
 
+        // isReload 强制直接刷新
+        if (pathObjs.isReload) {
+            return window.location.reload()
+        }
+
         if (pathObjs.type === 'error') {
             console.error(pathObjs.message)
             return 
@@ -54,39 +59,33 @@ module.exports = (wsPort, host, isMagix5) => {
                     }
                 })
             }
-            //如果存在对应的view，则更新
-            //if (currentVframes.length && currentVframes.length === pathObjs.depsPaths.length) 
-            if (currentVframes.length) {
-                //支持多种样式格式
-                const supportStyles = /(:?\.css|\.less|\.sass|\.scss)$/
-
-                if (supportStyles.test(pathObjs.originPath)) {
-                    const styles = Magix.applyStyle;
-                    for (const s in styles) {
-                        if (s == pathObjs.originPathResolve) {
-                            delete styles[s];
-                            document.getElementById(s).remove()
-                            break;
-                        }
+            
+            // 清除 Magix 缓存的样式文件，支持多种格式
+            const supportStyles = /(:?\.css|\.less|\.sass|\.scss)$/
+            if (supportStyles.test(pathObjs.originPath)) {
+                const styles = Magix.applyStyle;
+                for (const s in styles) {
+                    if (s == pathObjs.originPathResolve) {
+                        delete styles[s];
+                        document.getElementById(s).remove()
+                        break;
                     }
                 }
+            }
 
-                // require 移除view模块缓存
-                pathObjs.depsPaths.forEach(function (view) {
-                    const path = seajs.resolve(view);
-                    delete seajs.cache[path];
-                    delete seajs.data.fetchedList[path];
-                })
+            // seajs 移除 view 模块缓存
+            pathObjs.depsPaths.forEach(function (view) {
+                const path = seajs.resolve(view);
+                delete seajs.cache[path];
+                delete seajs.data.fetchedList[path];
+            })
 
+            // 如果当前页面存在对应的 view，则立即更新
+            if (currentVframes.length) {
                 // 重新加载view模块
                 currentVframes.forEach(function (vf) {
                     vf.${isMagix5 ? 'mount' : 'mountView'}(${isMagix5 ? 'vf.root, ' : ''}vf.path, vf.viewInitParams)
                 })
-            }
-            //不存在则直接reload整个页面
-            else {
-                console.log('[HMR] 非view的js更改直接刷新页面')
-                window.location.reload()
             }
 
         }, function (err) {
